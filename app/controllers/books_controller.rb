@@ -1,61 +1,13 @@
 class BooksController < ApplicationController
+  include Convert
   def index
-    @books = [
-      {id:1,title:"book1",x:500,y:1000,contents:
-        [
-          {id:1,text:"chapter1",height:100,order:1,children:
-            [
-              {id:2,text:"sentence1",order:1,height:100,parent_id:1,children:[]},
-              {id:3,text:"sentence2",order:2,height:100,parent_id:1,children:[]},
-              {id:4,text:"sentence3",order:3,height:100,parent_id:1,children:[]},
-              {id:4,text:"sentence4",order:4,height:100,parent_id:1,children:[]},
-              {id:4,text:"sentence5",order:5,height:100,parent_id:1,children:[]},
-            ]
-          },
-          {id:5,text:"chapter2",order:2,height:250,children:
-            [
-              {id:6,text:"sentence1",order:1,height:100,parent_id:5,children:[]},
-              {id:7,text:"sentence2",order:2,height:100,parent_id:5,children:[]},
-              {id:8,text:"sentence3",order:3,height:100,parent_id:5,children:[]},
-            ]
-          },
-          {id:5,text:"chapter3",order:3,height:250,children:
-            [
-              {id:6,text:"sentence1",order:1,height:100,parent_id:5,children:[]},
-              {id:7,text:"sentence2",order:2,height:100,parent_id:5,children:[]},
-              {id:8,text:"sentence3",order:3,height:100,parent_id:5,children:[]},
-            ]
-          },
-          {id:5,text:"chapter4",order:4,height:250,children:
-            [
-              {id:6,text:"sentence1",order:1,height:100,parent_id:5,children:[]},
-              {id:7,text:"sentence2",order:2,height:100,parent_id:5,children:[]},
-              {id:8,text:"sentence3",order:3,height:100,parent_id:5,children:[]},
-            ]
-          },
-          {id:5,text:"chapter5",order:5,height:250,children:
-            [
-              {id:6,text:"sentence1",order:1,height:100,parent_id:5,children:[]},
-              {id:7,text:"sentence2",order:2,height:100,parent_id:5,children:[]},
-              {id:8,text:"sentence3",order:3,height:100,parent_id:5,children:[]},
-            ]
-          },
-          {id:5,text:"chapter6",order:6,height:250,children:
-            [
-              {id:6,text:"sentence1",order:1,height:100,parent_id:5,children:[]},
-              {id:7,text:"sentence2",order:2,height:100,parent_id:5,children:[]},
-              {id:8,text:"sentence3",order:3,height:100,parent_id:5,children:[]},
-            ]
-          },
-          {id:5,text:"chapter7",order:7,height:250,children:
-            [
-              {id:6,text:"sentence1",order:1,height:100,parent_id:5,children:[]},
-              {id:7,text:"sentence2",order:2,height:100,parent_id:5,children:[]},
-              {id:8,text:"sentence3",order:3,height:100,parent_id:5,children:[]},
-            ]
-          },
-        ]
-      }
-    ]
+    @books = Book.all
+  end
+
+  def create
+    text = params[:text]
+    @book = Book.create(title:"book1",x:500,y:1000)
+    convert_md(@book,text)
+    redirect_to books_path
   end
 end
