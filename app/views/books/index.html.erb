@@ -3,5 +3,5 @@
     <%= text_area_tag(:text)%>
     <%= submit_tag("submit")%>
   <%end%>
-  <%= react_component('Canvas',data:@books)%>
+  <%= react_component('Canvas',url:'/books.json')%>
 </div>
