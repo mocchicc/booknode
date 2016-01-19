@@ -1,46 +1,36 @@
+// = require ./mixins/drag_content
+// = require ./mixins/draw_line
 var Content = React.createClass({
-  mixins:[],
+  mixins:[DragContent,DrawLine],
   propTypes: {
     id   : React.PropTypes.string,
-  //  depth: React.propTypes.integer,
     data : React.PropTypes.object
   },
+
   getInitialState() {
     return {
       depth:this.props.depth,
       text:this.props.data.text,
       order:this.props.data.order,
-      height:this.props.data.height,
+      height:0,
+      width:0,
       y:this.props.data.y,
       parent_id:this.props.data.parent_id,
-      children:this.props.data.children
+      children:this.props.data.children,
+      data:[],
+      mouseX:0,
+      mouseY:0
     };
   },
   componentDidMount:function(){
     let dom = $(ReactDOM.findDOMNode(this))
-    dom.draggable();
+    let con = this
+    this.getContentsHeight(dom);
+    this.drag_content(dom);
 
-//    this.drag_note(dom);
-//    this.resize_note(dom);
   },
   render: function() {
     var depth = this.state.depth;
-    if(this.state.children.length == 0){
-      var size = 0.3
-      var ch_flag = 1
-    }else{
-      var size = 1
-      var ch_flag = 2
-    }
-
-
-    if(this.state.children.length%2 == 0){//偶数
-      var half = this.state.children.length/2
-    }else{//奇数
-      var half = this.state.children.length/2+0.5
-    }
-
-    var top = (40*this.state.order*size)-(10*half);
     let content_style =  {
         position:"relative",
       //  width:200*ch_flag+"px",
@@ -50,17 +40,17 @@ var Content = React.createClass({
       };
       let content_title_style = {
         position:"relative",
-
+        backgroundColor:"white",
         top:this.state.y+"px",
         border:"solid 1px",
         maxHeight:"20px",
         width:300+"px",
         overflow:"scroll",
-        margin:"1em"
+        margin:"1em",
+        zIndex:"2"
       };
 
-
-    if( this.state.children.length != 0){
+    if( this.state.children){
       var content_props = this.state
 
       var childNodes = this.state.children.map(function(content,i){
@@ -73,11 +63,12 @@ var Content = React.createClass({
     }
     return (
       <div id={this.props.id} className="content" style={content_style} >
+
+        <SVGLine id={this.props.id} data={this.state.data} width={this.state.width} height={this.state.height} />
         {childNodes}
         <div className="content-text" style={content_title_style}>
           {this.state.text}
         </div>
-
       </div>
     );
   }
