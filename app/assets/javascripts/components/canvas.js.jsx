@@ -1,20 +1,28 @@
 //top level component
 //has_many books
 var Canvas = React.createClass({
+  loadBooksFromServer: function() {
+  let canvas = this
+  $.getJSON(this.props.url,null,function(data,status){
+    canvas.setState({data:data})
+    console.log(canvas.state.data)
+  })
+
+},
   getInitialState:function(){
-    return {data:this.props.data}
+    return {data:[]}
   },
   componentDidMount: function() {
     let canvas = this
     //dom.mousemove(function(e){canvas.setState({mouse:{x:e.offsetX,y:e.offsetY}})})
-    //this.setState({data:this.state.data;
-    console.log(this.state.data)
+    this.loadBooksFromServer();
+
   },
   zoom:function(){
   },
   render: function() {
     let canvas = this;
-    console.log(this.state.data)
+  //  console.log(this.state.data)
     let bookNodes = this.state.data.map(function(book,i){
       return (
         <Book key={i} id={"book"+book.id} data={book} />

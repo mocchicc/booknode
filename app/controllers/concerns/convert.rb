@@ -6,6 +6,7 @@ module Convert
    current_content = nil
    order = 0
    data = text.split("\n").select{|t|t != "\r"}
+
    data.each do |line|
      #行頭のスペースをカウント
     depth =  line.match(/^\s*-/).to_s.size
@@ -35,8 +36,11 @@ module Convert
     current_depth = depth
     depths << depth
   end
+
   max_depth = depths.max
+
   book.depth = max_depth
+  book.edge = depths.select{|d|d == max_depth}.size
   book.save
   end
 

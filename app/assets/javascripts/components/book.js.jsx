@@ -10,7 +10,10 @@ var Book = React.createClass({
       y:this.props.data.y,
       width:this.props.data.width,
       height:this.props.data.height,
+      edge:this.props.data.edge,
+      depth:this.props.data.depth,
       contents:this.props.data.contents
+
     };
   },
   componentDidMount:function(){
@@ -28,28 +31,31 @@ var Book = React.createClass({
     $(id + " > .card").css("margin-top",height/4+"px");
   },
   maximalize:function(){
-    console.log(1)
+
     let dom =$(ReactDOM.findDOMNode(this))
     let id = "#"+dom.attr("id")
     $(id + " > .contents").css("display","block");
     $(id + " > .card").css("display","none");
   },
   render: function() {
-    // this.props.data.notes.size
-    var size = 23
+
+    var size = this.state.edge
+    var depth = this.state.depth +1
     let book_style =  {
         position:"absolute",
         left:this.state.x,
         width:this.state.width,
-    //    border:"solid 1px",
+      //  border:"solid 1px",
         display:"block"
       };
     let contents_style = {
-      paddingBottom:50*23/2+"px",
-      paddingRight:200*(2-1)+"px"
+      paddingBottom:50*size/2+"px",
+      paddingRight:300*(depth)+"px",
+      border:"solid 1px"
     }
       let book_title_style = {
-        float:"left",
+        position:"relative",
+//        top:50*size/4+"px",
         border:"solid 1px",
         display:"block"
 
@@ -57,7 +63,7 @@ var Book = React.createClass({
 
     let contentNodes = this.state.contents.map(function(content,i){
      return (
-       <Content key={i} id={"content"+content.id}  data={content} />
+       <Content key={i} id={"content"+content.id}  depth={depth} data={content} />
      )
     })
     return (
