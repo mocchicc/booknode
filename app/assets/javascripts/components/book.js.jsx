@@ -1,5 +1,6 @@
+// = require ./mixins/draw_line
 var Book = React.createClass({
-  mixins:[],
+  mixins:[DrawLine],
   propTypes: {
     id  : React.PropTypes.string
   },
@@ -12,12 +13,13 @@ var Book = React.createClass({
       height:this.props.data.height,
       edge:this.props.data.edge,
       depth:this.props.data.depth,
-      contents:this.props.data.contents
-
+      contents:this.props.data.contents,
+      data:[]
     };
   },
   componentDidMount:function(){
       let dom = $(ReactDOM.findDOMNode(this))
+      this.getContentsHeight(dom.contents().first());
       dom.draggable();
 //    this.drag_note(dom);
 //    this.resize_note(dom);
@@ -51,15 +53,18 @@ var Book = React.createClass({
     let contents_style = {
       paddingBottom:50*size/2+"px",
       paddingRight:300*(depth)+"px",
-      border:"solid 1px"
+  
+      zIndex:"2"
     }
       let book_title_style = {
         position:"relative",
 //        top:50*size/4+"px",
+        width:"200px",
         border:"solid 1px",
         display:"block"
 
       };
+
 
     let contentNodes = this.state.contents.map(function(content,i){
      return (
@@ -69,16 +74,17 @@ var Book = React.createClass({
     return (
       <div id={this.props.id} className="book" style={book_style} >
         <div className="contents" style={contents_style}>
+          <SVGLine id={this.props.id} data={this.state.data} width={this.state.width} height={this.state.height} />
           {contentNodes}
           <div className="book-title" style={book_title_style} onClick={this.minimalize}>
             {this.state.title}
           </div>
         </div>
+
         <div className="card" style={{display:"none",border:"solid 1px"}} onClick={this.maximalize}>
           {this.state.title}
         </div>
       </div>
-
     );
   }
 });

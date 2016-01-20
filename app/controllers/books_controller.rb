@@ -1,38 +1,49 @@
 class BooksController < ApplicationController
   include Convert
+  before_action :set_book, only:[:edit,:update,:destroy]
+
   def index
     @books = Book.all
-=begin
-    @data = []
-    @books.each do |book|
-      book_data = {title:book.title,x:book.x,y:book.y,contents:[]}
-      book.contents.each do |content|
-          book_data.contents << func(content)
-      end
-    end
-=end
+  end
 
+  def show
+    @book = Book.find(params[:id])
+  end
+
+  def new
+    @book = Book.new
+  end
+
+  def edit
   end
 
   def create
-    text = params[:text]
-    @book = Book.create(title:"book1",x:500,y:1000)
+    text = book_params[:text]
+    @book = Book.create(book_params)
     convert_md(@book,text)
-    set_positons(@book)
+    #set_positons(@book)
     redirect_to books_path
   end
-end
 
-=begin
-def func(content)
-  if content.children.empty?
-    return []
-  else
-    content_data = {text:child.text,order:child.order,children:[]}
-    content.children.each do |child|
-      content_data.children << {text:child.text,order:child.order,children:func(child)}
+  def update
+    if @book.update(book_params)
+      redirect_to @book
+    else
+      render :edit
     end
-    return data
+  end
+
+  def destroy
+    @book.destroy
+    redirect_to books_url
+  end
+
+  private
+  def set_book
+      @book = Book.find(params[:id])
+  end
+
+  def book_params
+    params.require(:book).permit(:title,:author,:isbn,:text)
   end
 end
-=end

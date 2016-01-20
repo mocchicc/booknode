@@ -14,7 +14,6 @@ var Canvas = React.createClass({
   },
   componentDidMount: function() {
     let canvas = this
-    //dom.mousemove(function(e){canvas.setState({mouse:{x:e.offsetX,y:e.offsetY}})})
     this.loadBooksFromServer();
 
   },
