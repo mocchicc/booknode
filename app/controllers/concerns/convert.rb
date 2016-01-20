@@ -10,7 +10,7 @@ module Convert
    data.each do |line|
      #行頭のスペースをカウント
     depth =  line.match(/^\s*-/).to_s.size
-    if(depth == 0 )
+    if(depth == 1 )
       order +=1
       chapter = create_chapter(book,line,order)
       current_content = chapter
@@ -21,8 +21,8 @@ module Convert
       current_content = content
     elsif(current_depth > depth)
       #階層が上がる
-      parent_content = current_content.parent.parent if current_depth - depth > 1
-      parent_content = current_content.parent        unless current_depth - depth > 1
+      parent_content = current_content.parent.parent if current_depth - depth > 2
+      parent_content = current_content.parent        unless current_depth - depth > 2
 
       order = parent_content.order + 1
       content =  add_content(line,parent_content.parent,order)
@@ -55,3 +55,42 @@ module Convert
     return child
   end
 end
+=begin
+#-10*(7/2)*(15/2/2)*(24/2/3)
+
+def set_positons
+  size = []
+  @book.contents.each do |content|
+    #chapter
+
+    contnet.children.each do |child|
+    #content
+    [child.children.size,func(child)]]
+    end
+  end
+end
+def func(data,child)
+  if child.children.empty?
+    return
+  else
+    data << [child.children.size]
+    child.children.each do |ch|
+      data.last << func([],ch)
+    end
+    return data
+  end
+end
+#50*(7/2)*()
+
+def func(content)
+  if content.children.empty?
+    return []
+  else
+    content_data = {text:child.text,order:child.order,children:[]}
+    content.children.each do |child|
+      content_data.children << {text:child.text,order:child.order,children:func(child)}
+    end
+    return data
+  end
+end
+=end

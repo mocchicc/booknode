@@ -53,7 +53,7 @@ var Book = React.createClass({
     let contents_style = {
       paddingBottom:50*size/2+"px",
       paddingRight:300*(depth)+"px",
-      border:"solid 1px",
+  
       zIndex:"2"
     }
       let book_title_style = {
