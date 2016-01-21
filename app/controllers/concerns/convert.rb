@@ -68,12 +68,16 @@ def set_positons
     [child.children.size,func(child)]]
     end
   end
+
+  a2 = a[0].slice(1...-1)
+  a2 = a.each{|aa| a2a+= aa[0][0]}
 end
 def func(data,child)
   if child.children.empty?
-    return
+    return 0
   else
-    data << [child.children.size]
+    p child.children
+    data << child.children.size
     child.children.each do |ch|
       data.last << func([],ch)
     end
