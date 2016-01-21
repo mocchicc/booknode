@@ -5,7 +5,7 @@ var Canvas = React.createClass({
   let canvas = this
   $.getJSON(this.props.url,null,function(data,status){
     canvas.setState({data:data})
-    console.log(canvas.state.data)
+//    console.log(canvas.state.data)
   })
 
 },

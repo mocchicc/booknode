@@ -1,4 +1,4 @@
-
+/*
 // = require ./mixins/drag_content
 // = require ./mixins/draw_line
 var Content = React.createClass({
@@ -28,7 +28,8 @@ var Content = React.createClass({
     let con = this
     this.getContentsHeight(dom);
     this.drag_content(dom);
-
+    let id =$("#"+dom.attr("id")+" > .child-content").height()
+    this.setState({height:id})
   },
   render: function() {
 
@@ -39,24 +40,27 @@ var Content = React.createClass({
     }
     var depth = this.state.depth;
     let content_style =  {
-        position:"relative",
-    //    top:50*this.state.order*this.state.depth+"px",
-        left:pos*320+"px",
-        display:"block",
 
       };
-      let content_title_style = {
-        position:"relative",
+    let content_title_style = {
+        position:"static",
+        float:"left",
+        display:"inline",
         backgroundColor:"white",
-  //      top:this.state.y+"px",
         border:"solid 1px",
         maxHeight:"20px",
         width:300+"px",
         overflow:"scroll",
         margin:"0.5em",
-        zIndex:"2"
+        zIndex:"2",
+        marginTop:-10*(this.state.height/2/this.props.depth)+"px"
       };
-
+      let child_style = {
+        position:"static",
+        float:"right",
+        display:"inline",
+        marginLeft:"300px"
+      }
     if( this.state.children){
       var con = this
       var half = this.state.children.length/2
@@ -79,13 +83,15 @@ var Content = React.createClass({
     }
     return (
       <div id={this.props.id} className="content" style={content_style} >
-
-        {downChild}
         <div className="content-text" style={content_title_style}>
           {this.state.text}
         </div>
+        <div className="child-content" style={child_style}>
+        {downChild}
         {upChild}
+        </div>
       </div>
     );
   }
 });
+*/

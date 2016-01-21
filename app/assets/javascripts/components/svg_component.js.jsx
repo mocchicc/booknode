@@ -11,12 +11,33 @@ var Line = React.createClass({
 });
 
 var SVGLine = React.createClass({
-  render:function(){
+  getInitialState(){
+    return({
+    line:[]
 
+  })
+  },
+  componentDidMount:function(){
+    let lines  = this.props.data.map(function(line,i){
+
+
+        var hoge = $("#content"+line.child_id).offset();
+      var parent = $("#content"+line.parent_id).offset();
+console.log(line.child_id)
+            return (
+              <Line key={i} x1={parent.left} y1={parent.top} x2={hoge.left} y2={hoge.top} strokeWidth="1" stroke="black"/>
+            )
+        
+    })
+    this.setState({line:lines})
+  },
+  render:function(){
+    //console.log(this.props.data)
     let line_style={
       position:"absolute",
       //top:"-20px",
-      zIndex:"1"
+      zIndex:"1",
+//      marginLeft:-this.props.width
     }
     let svg_style={
       height:this.props.height+"px",
@@ -24,17 +45,12 @@ var SVGLine = React.createClass({
     }
     var current_height = 0;
     var svg = this;
-    let lines  = this.props.data.map(function(line,i){
-      current_height = current_height + line + (5*(i-1))
 
-            return (
-              <Line key={i} x1={svg.props.width/2} y1={svg.props.height} x2={svg.props.width} y2={current_height} strokeWidth="1" stroke="black"/>
-            )
-          })
+
     return(
     <div id={"line"+this.props.id} style={line_style}>
     <SVGComponent height={this.props.height} width={this.props.width} >
-          {lines}
+          {this.line}
     </SVGComponent>
     </div>
     )
