@@ -1,3 +1,4 @@
+// = require ./mixins/draw_line
 var SVGComponent = React.createClass({
   render: function(){
     return <svg {...this.props}>{this.props.children}</svg>;
@@ -11,49 +12,31 @@ var Line = React.createClass({
 });
 
 var SVGLine = React.createClass({
+  mixins:[DrawLine],
   getInitialState(){
     return({
-    line:[]
-
-  })
-  },
-  componentDidMount:function(){
-    let lines  = this.props.data.map(function(line,i){
-
-
-        var hoge = $("#content"+line.child_id).offset();
-      var parent = $("#content"+line.parent_id).offset();
-console.log(line.child_id)
-            return (
-              <Line key={i} x1={parent.left} y1={parent.top} x2={hoge.left} y2={hoge.top} strokeWidth="1" stroke="black"/>
-            )
-        
+      pos:"",
+      line:[]
     })
-    this.setState({line:lines})
   },
+  componentWillReceiveProps(nextProps){
+    //DrawLineのget_lineより　描画するリンクの情報を取得しコンポーネントを作成
+    this.get_line(nextProps)
+   },
   render:function(){
-    //console.log(this.props.data)
+    if(this.state.pos == "left"){var margin = 1}else{var margin = -1}
+    var svg = this.props;
     let line_style={
       position:"absolute",
-      //top:"-20px",
       zIndex:"1",
-//      marginLeft:-this.props.width
+      marginLeft:-10*margin+"px"
     }
-    let svg_style={
-      height:this.props.height+"px",
-      width:this.props.width+"px"
-    }
-    var current_height = 0;
-    var svg = this;
-
-
     return(
     <div id={"line"+this.props.id} style={line_style}>
     <SVGComponent height={this.props.height} width={this.props.width} >
-          {this.line}
+          {this.state.line}
     </SVGComponent>
     </div>
     )
-
   }
 })

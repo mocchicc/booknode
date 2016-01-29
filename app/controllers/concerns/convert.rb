@@ -5,32 +5,41 @@ module Convert
    current_depth = 0
    current_content = nil
    order = 0
+   chapter = 0
    data = text.split("\n").select{|t|t != "\r"}
 
    data.each do |line|
      #行頭のスペースをカウント
     depth =  line.match(/^\s*-/).to_s.size
+    new_content = Content.new({text:line,depth:depth,book_id:book.id})
     if(depth == 1 )
       order +=1
-      chapter = create_chapter(book,line,order)
-      current_content = chapter
+#      chapter +=1
+      new_content.order = order
+#      new_content.chapter = chapter
+      content = create_chapter(book,new_content)
+      current_content = content
     elsif(current_depth < depth)
       #階層が下がる
       order = 1
-      content =  add_content(line,current_content,order)
+      new_content.order = order
+      content =  add_content(book,current_content,new_content)
       current_content = content
     elsif(current_depth > depth)
       #階層が上がる
-      parent_content = current_content.parent.parent if current_depth - depth > 2
-      parent_content = current_content.parent        unless current_depth - depth > 2
-
+      #２段以上
+      parent_content = current_content.parent.parent if current_depth - depth >= 2
+      #１段まで
+      parent_content = current_content.parent        if current_depth - depth == 1
       order = parent_content.order + 1
-      content =  add_content(line,parent_content.parent,order)
+      new_content.order = order
+      content =  add_content(book,parent_content.parent,new_content)
       current_content = content
     elsif(current_depth == depth)
       #階層はそのまま
       order +=1
-      content = add_content(line,current_content.parent,order)
+      new_content.order = order
+      content = add_content(book,current_content.parent,new_content)
       current_content = content
     end
     current_depth = depth
@@ -40,61 +49,19 @@ module Convert
   max_depth = depths.max
 
   book.depth = max_depth
-  book.edge = depths.select{|d|d == max_depth}.size
+#  book.edge = depths.size
   book.save
   end
 
-  def create_chapter(book,line,order)
-    chapter = Content.create({text:line,order:order,book_id:book.id})
+  def create_chapter(book,chapter)
+    chapter.book_id = book.id
+    chapter.save
     return chapter
   end
 
-  def add_content(line,content,order)
-    child = Content.create({text:line,order:order})
-    node = Node.create({parent_id:content.id,child_id:child.id})
+  def add_content(book,content,child)
+    child.save
+    node = Node.create({parent_id:content.id,child_id:child.id,book_id:book.id})
     return child
   end
 end
-=begin
-#-10*(7/2)*(15/2/2)*(24/2/3)
-
-def set_positons
-  size = []
-  @book.contents.each do |content|
-    #chapter
-
-    contnet.children.each do |child|
-    #content
-    [child.children.size,func(child)]]
-    end
-  end
-
-  a2 = a[0].slice(1...-1)
-  a2 = a.each{|aa| a2a+= aa[0][0]}
-end
-def func(data,child)
-  if child.children.empty?
-    return 0
-  else
-    p child.children
-    data << child.children.size
-    child.children.each do |ch|
-      data.last << func([],ch)
-    end
-    return data
-  end
-end
-#50*(7/2)*()
-
-def func(content)
-  if content.children.empty?
-    return []
-  else
-    content_data = {text:child.text,order:child.order,children:[]}
-    content.children.each do |child|
-      content_data.children << {text:child.text,order:child.order,children:func(child)}
-    end
-    return data
-  end
-end
-=end

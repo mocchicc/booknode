@@ -1,5 +1,8 @@
-h1
-  = "Show:"+@book.title
-br
-= link_to "Back",books_path
-= react_component('Canvas',url:'/books/'+@book.id.to_s+'.json')
+div#header
+
+  h1
+    = "Show:"+@book.title
+  br
+  = link_to "Back",books_path
+
+= react_component('Canvas',url:'/books/'+@book.id.to_s)

@@ -5,23 +5,18 @@ var Canvas = React.createClass({
   let canvas = this
   $.getJSON(this.props.url,null,function(data,status){
     canvas.setState({data:data})
-//    console.log(canvas.state.data)
   })
-
 },
   getInitialState:function(){
-    return {data:[]}
+    return {data:[],x:0,y:0}
   },
   componentDidMount: function() {
-    let canvas = this
+    //books/id.json からデータを取得
     this.loadBooksFromServer();
-
-  },
-  zoom:function(){
   },
   render: function() {
     let canvas = this;
-  //  console.log(this.state.data)
+    //今後の拡張用に複数のBookを配置
     let bookNodes = this.state.data.map(function(book,i){
       return (
         <Book key={i} id={"book"+book.id} data={book} />

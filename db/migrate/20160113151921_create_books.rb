@@ -6,8 +6,8 @@ class CreateBooks < ActiveRecord::Migration
       t.string :isbn
       t.string :author
       t.integer :depth
-      t.integer :x
-      t.integer :y
+      t.integer :x,default:0
+      t.integer :y,default:0
       t.integer :width
       t.integer :height
       t.timestamps null: false

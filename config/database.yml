@@ -13,8 +13,8 @@ default: &default
   adapter: mysql2
   encoding: utf8
   pool: 5
-  username: booknode
-  password: booknode
+  username: root
+  password: sirannha
   host: localhost
 
 development:

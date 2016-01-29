@@ -4,7 +4,7 @@ class CreateNodes < ActiveRecord::Migration
       
       t.integer :parent_id
       t.integer :child_id
-
+      t.belongs_to :book
       t.timestamps null: false
     end
   end

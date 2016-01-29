@@ -8,6 +8,7 @@ class BooksController < ApplicationController
 
   def show
     @book = Book.find(params[:id])
+    @contents = @book.contents.where(depth:1)
   end
 
   def new

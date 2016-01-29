@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160120212324) do
+ActiveRecord::Schema.define(version: 20160115075954) do
 
   create_table "books", force: :cascade do |t|
     t.string   "title",      limit: 255
@@ -19,33 +19,33 @@ ActiveRecord::Schema.define(version: 20160120212324) do
     t.string   "isbn",       limit: 255
     t.string   "author",     limit: 255
     t.integer  "depth",      limit: 4
-    t.integer  "x",          limit: 4
-    t.integer  "y",          limit: 4
+    t.integer  "x",          limit: 4,   default: 0
+    t.integer  "y",          limit: 4,   default: 0
     t.integer  "width",      limit: 4
     t.integer  "height",     limit: 4
-    t.datetime "created_at",             null: false
-    t.datetime "updated_at",             null: false
-    t.integer  "edge",       limit: 4
+    t.datetime "created_at",                         null: false
+    t.datetime "updated_at",                         null: false
   end
 
   create_table "contents", force: :cascade do |t|
     t.string   "text",       limit: 255
     t.integer  "order",      limit: 4
-    t.integer  "x",          limit: 4
-    t.integer  "y",          limit: 4
+    t.integer  "x",          limit: 4,   default: 0
+    t.integer  "y",          limit: 4,   default: 0
     t.integer  "width",      limit: 4
     t.integer  "height",     limit: 4
+    t.integer  "depth",      limit: 4
     t.integer  "book_id",    limit: 4
-    t.datetime "created_at",             null: false
-    t.datetime "updated_at",             null: false
+    t.datetime "created_at",                         null: false
+    t.datetime "updated_at",                         null: false
   end
 
   create_table "nodes", force: :cascade do |t|
     t.integer  "parent_id",  limit: 4
     t.integer  "child_id",   limit: 4
+    t.integer  "book_id",    limit: 4
     t.datetime "created_at",           null: false
     t.datetime "updated_at",           null: false
-    t.integer  "book_id",    limit: 4
   end
 
   create_table "taggings", force: :cascade do |t|

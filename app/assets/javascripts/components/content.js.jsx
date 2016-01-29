@@ -1,54 +1,44 @@
-
 // = require ./mixins/drag_content
-// = require ./mixins/draw_line
+// = require ./mixins/set_child_content
 var Content = React.createClass({
-  mixins:[DragContent,DrawLine],
-  propTypes: {
-    id   : React.PropTypes.string,
-    data : React.PropTypes.object
-  },
-
+  mixins:[DragContent,SetChildContent],
   getInitialState() {
     return {
       depth:this.props.depth,
       text:this.props.data.text,
-      order:this.props.data.order,
-      height:0,
-      width:0,
-      y:this.props.data.y,
-      parent_id:this.props.data.parent_id,
       children:this.props.data.children,
-      data:[],
-      mouseX:0,
-      mouseY:0
+      width:0,
+      height:0,
+      y:0,
+      nodes:[]
     };
   },
   componentDidMount:function(){
     let dom = $(ReactDOM.findDOMNode(this))
-    let con = this
-    this.getContentsHeight(dom);
-    this.drag_content(dom);
+    //content-textの位置を取得してstateにセット
+    let pos  = dom.children(".content-text")
+    this.setState({x:pos.left,y:pos.top,height:dom.height()})
 
+    //子要素のIDを取得してnodesにセット
+    let children = new Array
+    dom.children(".up").children().map(function(){children.push($(this).attr("id"))})
+    dom.children(".down").children().map(function(){children.push($(this).attr("id"))})
+    this.setState({nodes:children})
+
+//    this.drag_content(dom);
   },
   render: function() {
+    //深度が増えるにあたって左はー、右は＋方向にleft:320する
+    if(this.props.pos == "left"){var pos = -1;
+    }else{var pos = 1;}
 
-    if(this.props.pos == "left"){
-      var pos = -1;
-    }else{
-      var pos = 1;
-    }
-    var depth = this.state.depth;
-    let content_style =  {
+    var content_style =  {
         position:"relative",
-    //    top:50*this.state.order*this.state.depth+"px",
         left:pos*320+"px",
-        display:"block",
-
       };
-      let content_title_style = {
+      var content_title_style = {
         position:"relative",
         backgroundColor:"white",
-  //      top:this.state.y+"px",
         border:"solid 1px",
         maxHeight:"20px",
         width:300+"px",
@@ -56,35 +46,22 @@ var Content = React.createClass({
         margin:"0.5em",
         zIndex:"2"
       };
+      //set_child_contentより子要素のコンポーネントを作成
+      let con = this.props.pos
+      let half = this.state.children.length/2
+      let children = this.set_child_content(this.state.children,half,{pre_c:con,next_c:con})
 
-    if( this.state.children){
-      var con = this
-      var half = this.state.children.length/2
-      var upChild = this.state.children.map(function(content,i){
-        if(i+1 > half){
-          return (
-            <Content key={i} pos={con.props.pos} id={"content"+content.id}  depth={depth-1} data={content} />
-          )
-        }
-      })
-      var downChild = this.state.children.map(function(content,i){
-        if(i+1 < half){
-        return (
-          <Content key={i} pos={con.props.pos} id={"content"+content.id}  depth={depth-1} data={content} />
-        )
-        }
-      })
-    }else{
-      var childNodes = ""
-    }
     return (
       <div id={this.props.id} className="content" style={content_style} >
-
-        {downChild}
+        {/*リンク描画用*/}
+        <SVGLine id={this.props.id} top={0} book={false} nodes={this.state.nodes} width={320} height={this.state.height} />
+        {/*上側*/}
+        <div className="up">{children.preChild}</div>
         <div className="content-text" style={content_title_style}>
           {this.state.text}
         </div>
-        {upChild}
+        {/*下側*/}
+        <div className="down">{children.nextChild}</div>
       </div>
     );
   }
